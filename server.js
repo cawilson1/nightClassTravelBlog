@@ -67,4 +67,28 @@ app.get("/users", async (req, res) => {
   }
 });
 
+app.put("/users", async (req, res) => {
+  try {
+    const result = await con.query(
+      `UPDATE travelblog.users SET username = '${req.query.username}' WHERE id = '${req.query.id}'`
+    );
+    res.send(result[0]);
+  } catch (error) {
+    res.send(error);
+    console.error(error);
+  }
+});
+
+app.delete("/users", async (req, res) => {
+  try {
+    const result = await con.query(
+      `DELETE FROM travelblog.users WHERE id = '${req.query.id}'`
+    );
+    res.send(result[0]);
+  } catch (error) {
+    res.send(error);
+    console.error(error);
+  }
+});
+
 app.listen(PORT, () => console.log(`server is running on ${PORT}`));
