@@ -17,34 +17,6 @@ const con = mysql.createPool({
   password: password
 });
 
-/*app.post("/users", (req, res) => {
-  if (
-    req.query.username &&
-    req.query.email &&
-    req.query.password &&
-    req.query.country
-  ) {
-    console.log("Request received");
-    con.connect(function(err) {
-      con.query(
-        `INSERT INTO travelblog.users (username, email, password, country) VALUES ('${req.query.username}', '${req.query.email}', '${req.query.password}', '${req.query.country}')`,
-        function(err, result, fields) {
-          if (err) res.send(err);
-          if (result)
-            res.send({
-              username: req.query.username,
-              email: req.query.email,
-              password: req.query.password,
-              country: req.query.country
-            });
-          if (fields) console.log(fields);
-        }
-      );
-    });
-  } else {
-    console.log("Missing a parameter");
-  }
-});*/
 app.post("/users", async (req, res) => {
   try {
     const result = await con.query(
@@ -83,6 +55,52 @@ app.delete("/users", async (req, res) => {
   try {
     const result = await con.query(
       `DELETE FROM travelblog.users WHERE id = '${req.query.id}'`
+    );
+    res.send(result[0]);
+  } catch (error) {
+    res.send(error);
+    console.error(error);
+  }
+});
+
+app.post("/blogposts", async (req, res) => {
+  try {
+    const result = await con.query(
+      `INSERT INTO travelblog.blogposts (destination, date, posts, usersid) VALUES ('${req.query.destination}', '${req.query.date}', '${req.query.posts}') FROM users JOIN blogposts ON (id = ${req.query.usersid}) `
+    );
+    res.send(result[0]);
+  } catch (error) {
+    res.send(error);
+    console.error(error);
+  }
+});
+
+app.get("/blogposts", async (req, res) => {
+  try {
+    const result = await con.query(`SELECT * FROM travelblog.blogposts`);
+    res.send(result[0]);
+  } catch (error) {
+    res.send(error);
+    console.error(error);
+  }
+});
+
+app.put("/blogposts", async (req, res) => {
+  try {
+    const result = await con.query(
+      `UPDATE travelblog.blogposts SET destination = '${req.query.destination}' WHERE usersid = '${req.query.usersid}'`
+    );
+    res.send(result[0]);
+  } catch (error) {
+    res.send(error);
+    console.error(error);
+  }
+});
+
+app.delete("/blogposts", async (req, res) => {
+  try {
+    const result = await con.query(
+      `DELETE FROM travelblog.blogposts WHERE id = '${req.query.id}'`
     );
     res.send(result[0]);
   } catch (error) {
