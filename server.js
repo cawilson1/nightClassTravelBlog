@@ -18,6 +18,7 @@ const con = mysql.createPool({
 });
 
 app.post("/users", async (req, res) => {
+  console.log("POST USERS")
   try {
     const result = await con.query(
       `INSERT INTO travelblog.users (username, email, password, country) VALUES ('${req.query.username}', '${req.query.email}', '${req.query.password}', '${req.query.country}')`
@@ -39,6 +40,16 @@ app.get("/users", async (req, res) => {
   }
 });
 
+app.get("/user", async (req, res) => {
+  try {
+    const result = await con.query(`SELECT * FROM travelblog.users WHERE username='${req.query.username}'`);
+    res.send(result[0]);
+  } catch (error) {
+    res.send(error);
+    console.error(error);
+  }
+});
+
 app.put("/users", async (req, res) => {
   try {
     const result = await con.query(
@@ -52,9 +63,10 @@ app.put("/users", async (req, res) => {
 });
 
 app.delete("/users", async (req, res) => {
+  console.log("DELETE USER")
   try {
     const result = await con.query(
-      `DELETE FROM travelblog.users WHERE id = '${req.query.id}'`
+      `DELETE FROM travelblog.users WHERE username = '${req.query.username}'`
     );
     res.send(result[0]);
   } catch (error) {
