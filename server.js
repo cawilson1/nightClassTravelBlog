@@ -76,9 +76,11 @@ app.delete("/users", async (req, res) => {
 });
 
 app.post("/blogposts", async (req, res) => {
+  console.log(`INSERT INTO travelblog.blogposts (destination, date, posts, usersid) VALUES ('${req.query.destination}', '${req.query.date}', '${req.query.posts}') FROM users JOIN blogposts ON (id = ${req.query.usersid})`)
+
   try {
     const result = await con.query(
-      `INSERT INTO travelblog.blogposts (destination, date, posts, usersid) VALUES ('${req.query.destination}', '${req.query.date}', '${req.query.posts}') FROM users JOIN blogposts ON (id = ${req.query.usersid}) `
+      `INSERT INTO travelblog.blogposts (destination, date, posts, usersid) VALUES ('${req.query.destination}', '${req.query.date}', '${req.query.posts}', (SELECT id FROM travelblog.users WHERE username='${req.query.username}'))`
     );
     res.send(result[0]);
   } catch (error) {
