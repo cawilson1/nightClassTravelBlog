@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <label for="input">Username:</label>
     <input type="text" id="username" /><br /><br />
     <label for="input">Destination:</label>
@@ -16,91 +15,93 @@
     <input type="text" id="date" /><br /><br />
     <label for="input">Posts:</label>
     <input type="text" id="posts" /><br /><br />
+    <label for="input">postid:</label>
+    <input type="text" id="postid" /><br /><br />
     <button onclick="postBlog()">Post</button>
     <button onclick="deleteBlog()">Delete</button>
     <button onclick="getBlog()">Get</button>
     <button onclick="putBlog()">Put</button>
 
     <script>
-        async function postBlog() {
-            let username = document.getElementById('username').value;
-            let destination = document.getElementById('destination').value;
-            let date = document.getElementById('date').value;
-            let posts = document.getElementById('posts').value;
+      async function postBlog() {
+        let username = document.getElementById("username").value;
+        let destination = document.getElementById("destination").value;
+        let date = document.getElementById("date").value;
+        let posts = document.getElementById("posts").value;
 
-            const responsePost = await fetch(`http://localhost:3000/blogposts?destination=${destination}&date=${date}&posts=${posts}&username=${username}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
+        const responsePost = await fetch(
+          `http://localhost:3000/blogposts?destination=${destination}&date=${date}&posts=${posts}&username=${username}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(await responsePost.json());
+      }
 
-            });
-            console.log(await responsePost.json());
+      async function deleteBlog() {
+        let postid = document.getElementById("postid").value;
 
-        }
+        const response = await fetch(
+          `http://localhost:3000/blogposts?id=${postid}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(await response.json());
+      }
 
-        async function deleteBlog() {
+      async function getBlog() {
+        let un = document.getElementById("username").value;
+        console.log(un)
+        const response = await fetch(
+          `http://localhost:3000/user?username=` + un,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        const myJson = await response.json();
+        console.log(myJson)
+        const userID = myJson[0].id;
+        console.log(userID)
 
-            let un = document.getElementById('username').value;
-            let pw = document.getElementById('password').value;
-            let country = document.getElementById('country').value;
-            let email = document.getElementById('email').value;
+        const responseID = await fetch(
+          `http://localhost:3000/userposts?usersid=${userID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(await responseID.json());
+      }
 
-            const response = await fetch(`http://localhost:3000/users?username=` + un, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
+      async function putBlog() {
+        let destination = document.getElementById("destination").value;
+        let postid = document.getElementById("postid").value;
 
-            });
-            console.log(await response.json());
+        
 
-        }
-
-        async function getBlog() {
-
-            let un = document.getElementById('username').value;
-
-            const response = await fetch(`http://localhost:3000/user?username=` + un, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-
-            });
-            console.log(await response.json());
-
-        }
-
-        async function putBlog() {
-
-            let un = document.getElementById('username').value;
-            let newun = document.getElementById('newusername').value;
-
-
-            const response = await fetch(`http://localhost:3000/user?username=` + un, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-
-            });
-            const myJson = await response.json();
-            const userID = myJson[0].id
-
-            const responseID = await fetch(`http://localhost:3000/users?username=${newun}&id=${userID}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-
-            });
-            console.log(await responseID.json());
-
-        }
-
-
+        const responseID = await fetch(
+          `http://localhost:3000/blogposts?id=${postid}&destination=${destination}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(await responseID.json());
+      }
     </script>
-</body>
-
+  </body>
 </html>
