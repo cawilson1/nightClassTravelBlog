@@ -99,10 +99,20 @@ app.get("/blogposts", async (req, res) => {
   }
 });
 
+app.get("/userposts", async (req, res) => {
+  try {
+    const result = await con.query(`SELECT * FROM travelblog.blogposts where usersid=${req.query.usersid}`);
+    res.send(result[0]);
+  } catch (error) {
+    res.send(error);
+    console.error(error);
+  }
+});
+
 app.put("/blogposts", async (req, res) => {
   try {
     const result = await con.query(
-      `UPDATE travelblog.blogposts SET destination = '${req.query.destination}' WHERE usersid = '${req.query.usersid}'`
+      `UPDATE travelblog.blogposts SET destination = '${req.query.destination}' WHERE id = '${req.query.id}'`
     );
     res.send(result[0]);
   } catch (error) {
